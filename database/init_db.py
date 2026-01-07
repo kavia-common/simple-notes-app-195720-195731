@@ -50,15 +50,40 @@ cursor.execute("""
     )
 """)
 
+# Notes table for the app (required by the notes application).
+# id is INTEGER PRIMARY KEY AUTOINCREMENT to keep ROWID optimization and stable ids.
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS notes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        content TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    )
+""")
+
 # Insert initial data
-cursor.execute("INSERT OR REPLACE INTO app_info (key, value) VALUES (?, ?)", 
+cursor.execute("INSERT OR REPLACE INTO app_info (key, value) VALUES (?, ?)",
                ("project_name", "database"))
-cursor.execute("INSERT OR REPLACE INTO app_info (key, value) VALUES (?, ?)", 
+cursor.execute("INSERT OR REPLACE INTO app_info (key, value) VALUES (?, ?)",
                ("version", "0.1.0"))
-cursor.execute("INSERT OR REPLACE INTO app_info (key, value) VALUES (?, ?)", 
+cursor.execute("INSERT OR REPLACE INTO app_info (key, value) VALUES (?, ?)",
                ("author", "John Doe"))
-cursor.execute("INSERT OR REPLACE INTO app_info (key, value) VALUES (?, ?)", 
+cursor.execute("INSERT OR REPLACE INTO app_info (key, value) VALUES (?, ?)",
                ("description", ""))
+
+# Seed minimal notes only when table is empty (avoid duplicate seed rows).
+cursor.execute("SELECT COUNT(*) FROM notes")
+notes_count = cursor.fetchone()[0]
+if notes_count == 0:
+    cursor.execute(
+        "INSERT INTO notes (title, content, created_at, updated_at) VALUES (?, ?, datetime('now'), datetime('now'))",
+        ("Welcome", "This is your first note. You can edit or delete it.")
+    )
+    cursor.execute(
+        "INSERT INTO notes (title, content, created_at, updated_at) VALUES (?, ?, datetime('now'), datetime('now'))",
+        ("Tips", "Use the + button to add a note. Notes are saved automatically when you click Save.")
+    )
 
 conn.commit()
 
