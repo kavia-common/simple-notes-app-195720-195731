@@ -2,3 +2,4 @@
 # Python: sqlite3.connect('myapp.db')
 # Connection string: sqlite:////home/kavia/workspace/code-generation/simple-notes-app-195720-195731/database/myapp.db
 # File path: /home/kavia/workspace/code-generation/simple-notes-app-195720-195731/database/myapp.db
+File path: /home/kavia/workspace/code-generation/simple-notes-app-195720-195731/database/myapp.db
